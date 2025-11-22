@@ -101,8 +101,15 @@ def visualize_results(results_file: str, plot_type: str = 'combined', output_fil
         plot_type: Type of plot ('cpu', 'memory', or 'combined')
         output_file: Optional output file for saving the plot
     """
-    with open(results_file, 'r') as f:
-        results = json.load(f)
+    try:
+        with open(results_file, 'r') as f:
+            results = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: Results file '{results_file}' not found")
+        return
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON in results file: {e}")
+        return
     
     measurements = results.get('measurements', [])
     
